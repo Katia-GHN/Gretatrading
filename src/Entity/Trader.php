@@ -87,4 +87,10 @@ class Trader
 
         return $this;
     }
+
+    public function GetHistoriqueTransaction():Collection
+
+    {
+        return $this->lestransactions;
+    }
 }

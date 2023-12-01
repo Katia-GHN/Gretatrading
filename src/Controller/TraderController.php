@@ -35,4 +35,14 @@ public function listTraders(TraderRepository $traderRepository): Response
         'traders' => $traders,
     ]);
 }
+
+#[Route('/trader/historique/{id}', name: 'app_trader_historique')]
+
+public function traderhistorique(Trader $trader): Response  // ON VA DEMANDER TT LES TRANSACTIONS D UN TRADER 
+{
+    return $this->render('trader/historique.html.twig', [
+        'trader' => $trader, // RETOURN TT LES DETAILS DE LA CLASSE TRADER
+    ]);
+}
+
 }
