@@ -63,4 +63,34 @@ class CoursAction
 
         return $this;
     }
+
+    // Calcule la variation en pourcentage du prix de l'action par rapport à la veille.
+    public function calculerVariationJournaliere (): ?float
+    {
+        // Prix aujourdhui et prix hier
+        $dateHier = (clone $this->datecoursaction)->modify('-1 day');
+
+        
+        $coursHier = $this->laaction->getCoursActionValide($dateHier);
+        
+        if ($coursHier === null || $coursHier == 0) {
+            return null;
+        }
+        return (($this->prix - $coursHier) / $coursHier) * 100;
+    }
+
+    //Récupère le prix le plus élevé jamais atteint par l'action. (voir classe Action)
+    public function getPlusHautPrixHistorique (): bool 
+    {
+        return $this->laaction->getCoursMax() == $this->prix;
+    }
+
+    //Compare le prix actuel de l'action avec sa moyenne mobile sur un certain nombre de jours.
+    public function compareAvecMoyenneMobile( int $param): bool
+    {     
+        $dateDebut = (clone $this->datecoursaction)->modify('-'. $param.'day');
+        //Booléen indiquant si le prix actuel est au-dessus ou en dessous de la moyenne mobile.
+        return $this->laaction->getMoyenMobile() == $this->prix;
+    }
+
 }

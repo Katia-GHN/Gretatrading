@@ -10,23 +10,26 @@ use App\Entity\Trader;
 
 class TraderController extends AbstractController
 {
-    #[Route('/trader', name: 'app_trader')]
-    public function index(): Response
-    {
-        return $this->render('trader/index.html.twig', [
-            'controller_name' => 'TraderController',
-        ]);
-    }
-    // Va reconnaitre qu'il y a un ID Va chercher l'objet qui correspond à cette ID
-    #[Route('/trader/{id}', name: 'trader_show')]
+
+#[Route('/trader', name: 'app_trader')]
+public function index(): Response
+{
+    return $this->render('trader/index.html.twig', [
+    'controller_name' => 'TraderController',
+]);
+}
+// Va reconnaitre qu'il y a un ID Va chercher l'objet qui correspond à cette ID
+
+#[Route('/trader/{id}', name: 'trader_show')]
 public function showTrader(Trader $trader): Response 
 {
-    // Pas besoin de vérifier si le trader existe, Symfony s'en occupe
+// Pas besoin de vérifier si le trader existe, Symfony s'en occupe
     return $this->render('trader/show.html.twig', [
-        'trader' => $trader,
-    ]);
+    'trader' => $trader,
+]);
 }
 #[Route('/traders', name: 'traders_list')]
+
 public function listTraders(TraderRepository $traderRepository): Response
 {
     $traders = $traderRepository->findAll(); // $ objet de la classe traderrepository -> renvoie moi tout les traders
@@ -45,4 +48,11 @@ public function traderhistorique(Trader $trader): Response  // ON VA DEMANDER TT
     ]);
 }
 
+#[Route('/trader/diversification/{id}', name: 'app_trader_diversification')]
+public function diversificationPortfolio(Trader $trader): Response  // ON VA DEMANDER TT LES TRANSACTIONS D UN TRADER 
+{
+    return $this->render('trader/diversification.html.twig', [
+        'trader' => $trader, // RETOURN TT LES DETAILS DE LA CLASSE TRADER
+    ]);
+}
 }

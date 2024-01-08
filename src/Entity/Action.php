@@ -403,5 +403,41 @@ class Action
         return $coursAuPlusProche;
     }
 
+    public function getCoursMax(): ?float
+    {   
+        $resultat = 0.00;
+        foreach ($this->lescoursactions as $unCoursAction)
+        {
+        if($unCoursAction->getPrix() > $resultat)
+        {
+            $resultat = $unCoursAction->getPrix();
+        }
+        }
+    return $resultat;
+    }
+
+    // compareAvecMoyenneMobile dans CoursAction
+    public function getMoyenMobile( \DateTime $dateDebut, \DateTime $dateFin): ?float
+    {
+        $sommeMoyenne = 0.0; // on défini nos variables 
+        $count = 0;
+
+        foreach ($this->lescoursactions as $unCoursAction) // on parcours la collection lescoursaction pr avoir les valeurs
+        {
+            // on défini un intervalle de temps
+            if ($unCoursAction->getDateCoursAction() >= $dateDebut && $unCoursAction->getDateCoursAction() < $dateFin)
+            {
+                $sommeMoyenne += $unCoursAction->getPrix();   // on ajoute/acrémente à notre ticket la valeur(prix du CoursAction)
+                $count++;
+            }
+        }
+        // Au cas ou 
+        if ($count == 0)    // on anticipe de 0 sinon ça crash
+        { 
+            return null;
+        }
+
+        return $sommeMoyenne / $count;   // Moyenne = Valeurs / nbrdevaleurs
+    }
     
 }
