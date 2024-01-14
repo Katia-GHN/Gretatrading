@@ -24,9 +24,18 @@ class Trader
     #[ORM\OneToMany(mappedBy: 'letrader', targetEntity: Transaction::class)]
     private Collection $lestransactions;
 
+    #[ORM\OneToMany(mappedBy: 'letrader', targetEntity: Motdepasse::class)]
+    private Collection $lesmotsdepasse;
+
+    #[ORM\ManyToOne(inversedBy: 'lestraders')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Habilitation $lahabilitation = null;
+
+
     public function __construct()
     {
         $this->lestransactions = new ArrayCollection();
+        $this->lesmotsdepasse = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -152,6 +161,100 @@ class Trader
     public function decrypterSansCle (string $motadecoder) : collection
     {
 
+    }
+
+
+/****************** MotDePasse *************** */
+
+    /**
+     * @return Collection<int, Motdepasse>
+     */
+    public function getLesmotsdepasse(): Collection
+    {
+        return $this->lesmotsdepasse;
+    }
+
+    public function addLesmotsdepasse(Motdepasse $lesmotsdepasse): static
+    {
+        if (!$this->lesmotsdepasse->contains($lesmotsdepasse)) {
+            $this->lesmotsdepasse->add($lesmotsdepasse);
+            $lesmotsdepasse->setLetrader($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLesmotsdepasse(Motdepasse $lesmotsdepasse): static
+    {
+        if ($this->lesmotsdepasse->removeElement($lesmotsdepasse)) {
+            // set the owning side to null (unless already changed)
+            if ($lesmotsdepasse->getLetrader() === $this) {
+                $lesmotsdepasse->setLetrader(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function ExiteMotDePasseK(string $motDePasse): bool
+    {
+        $resultat = false;
+
+            if  ($this->lesmotsdepasse->contains($lemotsdepasse)) 
+            {
+                return $resultat = true;
+            }
+
+            else return false;
+        
+        return $resultat;
+    }
+
+    public function ExiteMotDePasse(string $motDePasse): bool
+    {
+        foreach($this->lesmotsdepasse as $lemotdepasse)
+        {
+            if($lemotdepasse->getNom() == $motDePasse)
+            {
+                $resultat = true;
+            }
+        }
+        return $resultat;
+    }
+
+    public function GenererNewMotDePasse($motDePasse): bool
+    {
+        $newObjet = New Motdepasse();   // on creer un objet dans la classe Motdepasse
+
+        $newObjet->setNom($motDePasse);   // on ajoute l'objet dans le nom de la classe Motdepasse
+
+        if($newObjet->verifierMdp() && $this->ExisteMotDePasse($motDePasse) == false )  // l'objet est crée si elle répond aux condition de la méthode crée dans la classe Motdepasse
+        {
+            $newObjet->setDate(new \Datetime());
+
+            return true;
+        }
+        else
+        {
+            $newObjet = null;
+
+            return false;
+        }
+
+    }
+
+    /** ******** UNE Habilitation ********** */
+
+    public function getLahabilitation(): ?Habilitation
+    {
+        return $this->lahabilitation;
+    }
+
+    public function setLahabilitation(?Habilitation $lahabilitation): static
+    {
+        $this->lahabilitation = $lahabilitation;
+
+        return $this;
     }
 
 }
